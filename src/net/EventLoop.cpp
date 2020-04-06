@@ -22,6 +22,7 @@ EventLoop::~EventLoop()
 }
 void EventLoop::Loop()
 {
+    looping_ = true;
     while (looping_)
     {
         active_channel_list.clear();
@@ -37,9 +38,4 @@ void EventLoop::Loop()
 void EventLoop::UpdateChannel(Channel* channel)
 {
     multi_base_->UpdateChannel(channel);
-}
-void EventLoop::Start()
-{
-    looping_ = true;
-    Loop();
 }

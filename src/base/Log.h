@@ -31,11 +31,13 @@ if (r)  \
     printf("\n[INFO][file: %s][line: %d]\n", __FILE__, __LINE__);  \
 }   \
 
-#define LOG_DEBUG(...)   \
-{   \
-    printf(__VA_ARGS__); \
-    printf("\n[DEBUG][file: %s][line: %d]\n", __FILE__, __LINE__);  \
-}   \
+//#define LOG_DEBUG(...)   \
+//{   \
+//    printf(__VA_ARGS__); \
+//    printf("\n[DEBUG][file: %s][line: %d]\n", __FILE__, __LINE__);  \
+//}   \
+
+#define LOG_DEBUG(...){}
 
 class Log
 {

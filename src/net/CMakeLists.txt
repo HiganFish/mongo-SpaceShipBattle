@@ -7,6 +7,7 @@ SET(HEADFILES
         Socket.h
         InetAddress.h
         Acceptor.h
+        TcpServer.h
 )
 
 SET(SRCFILES
@@ -15,9 +16,11 @@ SET(SRCFILES
         Channel.cpp
         multiplexing/MultiEpoll.cpp
         multiplexing/MultiSelect.cpp
-        Socket.h
-        InetAddress.h
-        Acceptor.h
+        Socket.cpp
+        InetAddress.cpp
+        Acceptor.cpp
+        TcpServer.cpp
 )
 
 add_library(mongo_net ${HEADFILES} ${SRCFILES})
+target_link_libraries(mongo_net mongo_base)

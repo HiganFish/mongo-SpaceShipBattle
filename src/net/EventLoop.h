@@ -20,9 +20,10 @@ public:
     EventLoop();
     ~EventLoop();
 
+    /**
+     * under normal conditions endless loop
+     */
     void Loop();
-
-    void Start();
 
     void UpdateChannel(Channel *channel);
 
@@ -34,7 +35,6 @@ private:
 
     typedef std::vector<Channel*> ActiveChannelList;
     ActiveChannelList active_channel_list;
-
 };
 }
 }
