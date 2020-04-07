@@ -8,6 +8,9 @@ SET(HEADFILES
         InetAddress.h
         Acceptor.h
         TcpServer.h
+        TcpConnection.h
+        Buffer.h
+        ConnectionCallback.h
 )
 
 SET(SRCFILES
@@ -20,6 +23,8 @@ SET(SRCFILES
         InetAddress.cpp
         Acceptor.cpp
         TcpServer.cpp
+        TcpConnection.cpp
+        Buffer.cpp
 )
 
 add_library(mongo_net ${HEADFILES} ${SRCFILES})

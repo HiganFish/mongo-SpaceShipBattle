@@ -36,17 +36,16 @@ void MultiEpoll::UpdateChannel(Channel* channel)
         break;
     }
     case Channel::ADDED:
-        break;
-    case Channel::MOD:
     {
-        Update(EPOLL_CTL_MOD, channel);
-        channel->SetStatus(Channel::ADDED);
-        break;
-    }
-    case Channel::DEL:
-    {
-        Update(EPOLL_CTL_DEL, channel);
-        channel->SetStatus(Channel::DELED);
+        if (channel->GetREvents() == 0)
+        {
+            Update(EPOLL_CTL_DEL, channel);
+            channel->SetStatus(Channel::DELED);
+        }
+        else
+        {
+            Update(EPOLL_CTL_MOD, channel);
+        }
         break;
     }
     case Channel::DELED:

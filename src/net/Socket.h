@@ -26,10 +26,12 @@ public:
 
     int Accept(InetAddress* addr);
 
+    int Send(const char* msg, size_t len);
+
     int GetFd() const
-    { return fd_; }
+    { return sockfd_; }
 private:
-    int fd_;
+    int sockfd_;
 };
 }
 

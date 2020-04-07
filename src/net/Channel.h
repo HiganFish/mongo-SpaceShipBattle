@@ -19,7 +19,7 @@ class Channel
 public:
     typedef std::function<void()> EventCallback;
 
-    enum ChannelStatus {ADD, ADDED, MOD, DEL, DELED};
+    enum ChannelStatus {ADD, ADDED, DELED};
 
     Channel(EventLoop *loop, int fd);
     ~Channel();
@@ -69,7 +69,7 @@ private:
 
     EventLoop *loop_;
 
-    int fd_;
+    const int fd_;
 
     /**
      * 回调事件

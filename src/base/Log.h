@@ -13,22 +13,29 @@
 #define EXIT_IF(r, ...) \
 if (r)  \
 {   \
-    printf(__VA_ARGS__);    \
-    printf("\n[ERROR][file: %s][line: %d][errno: %d] %s\n", __FILE__, __LINE__, errno, strerror(errno));  \
+    LOG_ERROR(__VA_ARGS__) \
     exit(errno); \
 }   \
 
+#define LOG_ERROR(...)   \
+{   \
+    printf("[ERROR][func: %s][line: %d]", __FUNCTION__, __LINE__);  \
+    printf(__VA_ARGS__); \
+    printf("\n");    \
+}   \
 
 #define LOG_WARN(...)   \
 {   \
+    printf("[WARN][func: %s][line: %d]", __FUNCTION__, __LINE__);  \
     printf(__VA_ARGS__); \
-    printf("\n[ERROR][file: %s][line: %d]\n", __FILE__, __LINE__);  \
+    printf("\n");    \
 }   \
 
 #define LOG_INFO(...)   \
 {   \
+    printf("[INFO][func: %s][line: %d]", __FUNCTION__, __LINE__);  \
     printf(__VA_ARGS__); \
-    printf("\n[INFO][file: %s][line: %d]\n", __FILE__, __LINE__);  \
+    printf("\n");    \
 }   \
 
 //#define LOG_DEBUG(...)   \
