@@ -4,7 +4,6 @@
 
 #include "EventLoop.h"
 #include "multiplexing/MultiBase.h"
-#include "multiplexing/MultiEpoll.h"
 #include "Channel.h"
 
 using namespace mongo;

@@ -11,6 +11,8 @@ SET(HEADFILES
         TcpConnection.h
         Buffer.h
         ConnectionCallback.h
+        EventLoopThread.h
+        EventLoopThreadPoll.h
 )
 
 SET(SRCFILES
@@ -25,6 +27,8 @@ SET(SRCFILES
         TcpServer.cpp
         TcpConnection.cpp
         Buffer.cpp
+        EventLoopThread.cpp
+        EventLoopThreadPoll.cpp
 )
 
 add_library(mongo_net ${HEADFILES} ${SRCFILES})

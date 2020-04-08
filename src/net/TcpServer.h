@@ -13,6 +13,9 @@ namespace mongo
 {
 namespace net
 {
+
+class EventLoopThreadPoll;
+
 class TcpServer : noncopyable
 {
 public:
@@ -29,9 +32,11 @@ public:
     void SetWriteOverCallback(const WriteOverCallback& cb)
     { writeover_callback_ = cb; }
 
+    void SetThreadNum(int nums);
 private:
 
     EventLoop* loop_;
+    std::shared_ptr<EventLoopThreadPoll> poll_;
     std::string server_name_;
     std::unique_ptr<Acceptor> acceptor_;
     const InetAddress host_addr_;
@@ -43,9 +48,7 @@ private:
     ConnectionPtrMap connections;
 
     void NewConnection(int sockfd, const InetAddress& addr);
-
     void CloseConnection(const TcpConnectionPtr& conn);
-
     void DefaultMessageCallback(const TcpConnectionPtr& conn, Buffer* buffer);
 };
 }

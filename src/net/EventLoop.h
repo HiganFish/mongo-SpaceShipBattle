@@ -14,6 +14,7 @@ namespace net
 {
 class Channel;
 class MultiBase;
+
 class EventLoop
 {
 public:
@@ -28,13 +29,11 @@ public:
     void UpdateChannel(Channel *channel);
 
 private:
-
     bool looping_;
-
     std::unique_ptr<MultiBase> multi_base_;
-
     typedef std::vector<Channel*> ActiveChannelList;
     ActiveChannelList active_channel_list;
+
 };
 }
 }
