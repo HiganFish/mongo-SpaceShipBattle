@@ -100,7 +100,7 @@ void TcpConnection::Send(const char* msg, size_t len)
         }
         else if (ret < len)
         {
-            output_buffer_.SaveData(msg + ret, len - ret);
+            output_buffer_.Append(msg + ret, len - ret);
             channel_->EnableWriting();
         }
         else

@@ -19,9 +19,9 @@ public:
     Buffer();
     ~Buffer();
 
-    int ReadFromFd(int sockfd);
+    size_t ReadFromFd(int fd);
 
-    void SaveData(const char* begin, size_t len);
+    void Append(const char* begin, size_t len);
 
     size_t ReadableBytes() const
     { return write_index_ - read_index_; }
@@ -34,7 +34,18 @@ public:
     void MoveWriteIndex(size_t bytes);
 
     const char* Begin() const
-    { return &buffer_[read_index_]; }
+    { return &*buffer_.begin(); }
+
+    char* Begin()
+    { return &*buffer_.begin(); }
+
+    char* WriteBegin()
+    { return Begin() + write_index_; }
+
+    char* ReadBegin()
+    { return Begin() + read_index_; }
+
+    void DropAllData();
 
     std::string ReadAllAsString();
     std::string ReadBytesAsString(size_t bytes);
@@ -47,7 +58,9 @@ private:
     size_t write_index_;
     std::vector<char> buffer_;
 
-    void MoveReadIndexToEnd();
+    void EnsureWriteBytes(size_t len);
+
+    void ExpanseBuffer(size_t len);
 };
 }
 }

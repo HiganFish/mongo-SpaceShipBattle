@@ -29,6 +29,10 @@ void TcpServer::Start()
 void TcpServer::NewConnection(int sockfd, const InetAddress& addr)
 {
     std::string connection_name = server_name_ + addr.GetIpPort();
+
+    /**
+     * 这一行代码很妙, 单线程时候返回最初传入的事件循环 多线程返回对应的事件循环
+     */
     EventLoop *io_loop = poll_->GetNextEventLoop();
 
     TcpConnectionPtr connection(new TcpConnection(io_loop, connection_name, sockfd, host_addr_, addr));
