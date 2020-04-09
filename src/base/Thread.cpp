@@ -3,12 +3,14 @@
 //
 
 #include "Thread.h"
-#include "Log.h"
 #include <utility>
 
 
 using namespace mongo;
 
+__thread int CurrentThread::t_cached_tid;
+__thread char CurrentThread::t_tid_string[32];
+__thread int CurrentThread::t_tid_stringlength;
 
 struct ThreadData
 {
