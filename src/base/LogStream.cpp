@@ -76,6 +76,14 @@ LogStream& LogStream::operator<<(const char* str)
     return *this;
 }
 
+LogStream& LogStream::operator<<(const std::string& str)
+{
+    if (!str.empty())
+    {
+        buffer_.Append(str.c_str(), str.size());
+    }
+}
+
 const char digits_character[] = "0123456789";
 
 // LEARN https://www.drdobbs.com/flexible-c-1-efficient-integer-to-string/184401596

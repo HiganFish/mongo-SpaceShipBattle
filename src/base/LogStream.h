@@ -14,6 +14,7 @@
 #include <type_traits>
 #include <cassert>
 #include <cstring>
+#include <string>
 #include <cstdio>
 #include "noncopyable.h"
 namespace mongo
@@ -84,6 +85,7 @@ public:
 
     LogStream& operator<<(char str);
     LogStream& operator<<(const char* str);
+    LogStream& operator<<(const std::string& str);
 
     const LogBuffer& GetBuffer() const
     {

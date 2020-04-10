@@ -43,6 +43,11 @@ public:
     { return client_addr_; }
 
     void ConnectionCreated();
+
+    void CloseConnection();
+
+    bool Connected() const
+    { return status_ == CONNECTED; }
 private:
 
     enum Status{CONNECTING, CONNECTED, CLOSEING, CLOSED};

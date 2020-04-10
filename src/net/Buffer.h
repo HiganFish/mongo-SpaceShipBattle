@@ -29,9 +29,9 @@ public:
     size_t WriteableBytes() const
     { return buffer_.size() - write_index_;}
 
-    void MoveReadIndex(size_t bytes);
+    void AddReadIndex(size_t bytes);
 
-    void MoveWriteIndex(size_t bytes);
+    void AddWriteIndex(size_t bytes);
 
     const char* Begin() const
     { return &*buffer_.begin(); }
@@ -49,6 +49,13 @@ public:
 
     std::string ReadAllAsString();
     std::string ReadBytesAsString(size_t bytes);
+
+    /**
+     * peek int32 from buffer and transform form network to host
+     * @return
+     */
+    int32_t PeekInt32();
+
 private:
 
     const static int DEFAULT_BUFFER_SIZE = 1024;

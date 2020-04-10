@@ -66,7 +66,7 @@ void TcpConnection::WriteHandle()
                 write_over_callback_(shared_from_this());
             }
         }
-        output_buffer_.MoveReadIndex(ret);
+        output_buffer_.AddReadIndex(ret);
     }
 }
 
@@ -119,4 +119,8 @@ void TcpConnection::ConnectionCreated()
         status_ = CONNECTED;
         channel_->EnableReading();
     }
+}
+void TcpConnection::CloseConnection()
+{
+    CloseHandle();
 }

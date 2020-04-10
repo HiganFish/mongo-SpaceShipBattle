@@ -5,7 +5,9 @@
 #include <sys/socket.h>
 #include <sys/uio.h>
 #include <cassert>
+#include <cstring>
 #include "Buffer.h"
+#include "Endian.h"
 
 using namespace mongo;
 using namespace mongo::net;
@@ -57,9 +59,9 @@ size_t Buffer::ReadFromFd(int fd)
     return ret;
 }
 
-void Buffer::MoveReadIndex(size_t bytes)
+void Buffer::AddReadIndex(size_t bytes)
 {
-    if (bytes <= ReadableBytes())
+    if (bytes < ReadableBytes())
     {
         read_index_ += bytes;
     }
@@ -73,7 +75,7 @@ void Buffer::DropAllData()
     read_index_ = BUFFER_BEGIN;
     write_index_ = BUFFER_BEGIN;
 }
-void Buffer::MoveWriteIndex(size_t bytes)
+void Buffer::AddWriteIndex(size_t bytes)
 {
     if (bytes <= WriteableBytes())
     {
@@ -97,7 +99,7 @@ std::string Buffer::ReadBytesAsString(size_t bytes)
         bytes = ReadableBytes();
     }
     std::string result(Begin() + read_index_, bytes);
-    MoveReadIndex(bytes);
+    AddReadIndex(bytes);
 
     return result;
 }
@@ -106,7 +108,7 @@ void Buffer::Append(const char* begin, size_t len)
 {
     EnsureWriteBytes(len);
     std::copy(begin, begin + len, Begin() + write_index_);
-    MoveWriteIndex(len);
+    AddWriteIndex(len);
 }
 void Buffer::EnsureWriteBytes(size_t len)
 {
@@ -133,5 +135,14 @@ void Buffer::ExpanseBuffer(size_t len)
     else
     {
         buffer_.resize(write_index_ + len);
+    }
+}
+int32_t Buffer::PeekInt32()
+{
+    if (ReadableBytes() >= sizeof(int32_t))
+    {
+        int32_t ret = 0;
+        ::memcpy(&ret, ReadBegin(), sizeof(int32_t));
+        return sockets::NetworkToHost32(ret);
     }
 }
