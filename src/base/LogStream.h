@@ -48,12 +48,12 @@ public:
         }
     }
 
-    char* WritePeek() const
+    char* WritePoint() const
     {
         return cur_;
     }
 
-    void MoveWritePeek(size_t t)
+    void MoveWritePoint(size_t t)
     {
         cur_ += t;
     }
@@ -108,7 +108,7 @@ public:
     {
         return buff_;
     }
-    int Length() const
+    int GetLength() const
     {
         return length_;
     }

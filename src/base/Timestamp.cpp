@@ -7,7 +7,7 @@
 
 using namespace mongo;
 
-const int Timestamp::MS_PER_SECOND;
+const int Timestamp::US_PER_SECOND;
 
 
 Timestamp Timestamp::Now()
@@ -15,5 +15,5 @@ Timestamp Timestamp::Now()
     struct timeval tv;
     gettimeofday(&tv, nullptr);
 
-    return Timestamp(tv.tv_sec * MS_PER_SECOND + tv.tv_usec);
+    return Timestamp(tv.tv_sec * US_PER_SECOND + tv.tv_usec);
 }

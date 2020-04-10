@@ -109,7 +109,7 @@ void LogStream::FormatInteger(T t)
 {
     if (buffer_.WriteableBytes() > MAX_NUMBER_SIZE)
     {
-        size_t len = Convert(buffer_.WritePeek(), t);
-        buffer_.MoveWritePeek(len);
+        size_t len = Convert(buffer_.WritePoint(), t);
+        buffer_.MoveWritePoint(len);
     }
 }

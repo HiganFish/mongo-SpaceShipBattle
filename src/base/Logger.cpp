@@ -96,9 +96,9 @@ void Logger::Impl::FormatTime()
 {
     // 20200409 19:21:35.121221Z
 
-    int64_t ms_since_create = time_.GetMsSinceCreate();
-    time_t seconds = static_cast<time_t>(ms_since_create / Timestamp::MS_PER_SECOND);
-    int ms = static_cast<int>(ms_since_create % Timestamp::MS_PER_SECOND);
+    int64_t us_since_create = time_.GetUsSinceCreate();
+    time_t seconds = static_cast<time_t>(us_since_create / Timestamp::US_PER_SECOND);
+    int us = static_cast<int>(us_since_create % Timestamp::US_PER_SECOND);
     if (seconds != t_last_second)
     {
         t_last_second = seconds;
@@ -118,9 +118,9 @@ void Logger::Impl::FormatTime()
     }
 
     // .121221Z
-    Fmt us(".%06d ", ms);
-    assert(us.Length() == 8);
-    stream_ << T(t_time, 17) << T(us.GetData(), 9);
+    Fmt us_fmt(".%06d ", us);
+    assert(us_fmt.GetLength() == 8);
+    stream_ << T(t_time, 17) << T(us_fmt.GetData(), 8);
 }
 void Logger::Impl::Finish()
 {
