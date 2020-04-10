@@ -9,7 +9,9 @@ using namespace mongo::net;
 
 ProtobufServer::ProtobufServer(EventLoop* loop, const std::string& name, const InetAddress& addr):
 server_(loop, name, addr),
-codec_(DefaultProtobufMessageCallback)
+dispatcher(UnknowProtobufMessageCallback),
+codec_(std::bind(&Dispatcher::OnProtobufMessageCome, &dispatcher, _1, _2))
+
 {
     server_.SetMessageCallback(std::bind(&ProtobufCodec::OnMessage, &codec_, std::placeholders::_1, std::placeholders::_2));
 }
@@ -21,7 +23,7 @@ void ProtobufServer::SetThreadNum(int num)
 {
     server_.SetThreadNum(num);
 }
-void ProtobufServer::DefaultProtobufMessageCallback(const TcpConnectionPtr& conn, const MessagePtr& message)
+void ProtobufServer::UnknowProtobufMessageCallback(const TcpConnectionPtr& conn, const MessagePtr& message)
 {
 
 }

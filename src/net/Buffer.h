@@ -8,6 +8,7 @@
 #include <vector>
 #include <cstddef>
 #include <string>
+#include "Endian.h"
 
 namespace mongo
 {
@@ -33,12 +34,6 @@ public:
 
     void AddWriteIndex(size_t bytes);
 
-    const char* Begin() const
-    { return &*buffer_.begin(); }
-
-    char* Begin()
-    { return &*buffer_.begin(); }
-
     char* WriteBegin()
     { return Begin() + write_index_; }
 
@@ -56,6 +51,11 @@ public:
      */
     int32_t PeekInt32();
 
+    void AppendInt32(int32_t num);
+
+    void RAppendInt32(int32_t num);
+
+    void EnsureWriteBytes(size_t len);
 private:
 
     const static int DEFAULT_BUFFER_SIZE = 1024;
@@ -65,9 +65,13 @@ private:
     size_t write_index_;
     std::vector<char> buffer_;
 
-    void EnsureWriteBytes(size_t len);
-
     void ExpanseBuffer(size_t len);
+
+    const char* Begin() const
+    { return &*buffer_.begin(); }
+
+    char* Begin()
+    { return &*buffer_.begin(); }
 };
 }
 }

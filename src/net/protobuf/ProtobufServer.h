@@ -7,6 +7,8 @@
 
 #include "TcpServer.h"
 #include "ProtobufCodec.h"
+#include "Dispatcher.h"
+
 namespace mongo
 {
 namespace net
@@ -21,17 +23,23 @@ public:
 
     void SetThreadNum(int num);
 
-    void SetProtobufMessageCallback(const ProtobufMessageCallback& callback)
+    void SetUnknowMessageCallback(const ProtobufMessageCallback& callback)
     {
-        codec_.SetProtobufMessageCallback(callback);
+        dispatcher.SetProtobufMessageCallback(callback);
+    }
+
+    void RegistCallback(const google::protobuf::Descriptor* descriptor, const ProtobufMessageCallback& callback)
+    {
+        dispatcher.RegistCallback(descriptor, callback);
     }
 
     void Start();
 private:
     TcpServer server_;
+    Dispatcher dispatcher;
     ProtobufCodec codec_;
 
-    static void DefaultProtobufMessageCallback(const TcpConnectionPtr& conn, const MessagePtr& message);
+    static void UnknowProtobufMessageCallback(const TcpConnectionPtr& conn, const MessagePtr& message);
 };
 }
 }

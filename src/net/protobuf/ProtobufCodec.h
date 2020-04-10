@@ -32,7 +32,7 @@ public:
     const static std::string ErrorCodeToString[static_cast<int>(ErrorCode::ERROR_LENGTH)];
 
 
-    typedef std::function<void(const TcpConnectionPtr& conn, MessagePtr)> ProtobufMessageCallback;
+    typedef std::function<void(const TcpConnectionPtr& conn, const MessagePtr& ptr)> ProtobufMessageCallback;
     typedef std::function<void(const TcpConnectionPtr& conn, Buffer* buffer, ErrorCode code)> InvalidMessageCallback;
 
     explicit ProtobufCodec(ProtobufMessageCallback  callback):
@@ -41,6 +41,8 @@ public:
     {}
 
     void OnMessage(const TcpConnectionPtr& conn, Buffer* buffer);
+
+    void SerializeToEmptyBuffer(Buffer* buffer, const google::protobuf::Message& message);
 
     void Send(const TcpConnectionPtr& conn, const MessagePtr& message);
 
@@ -71,6 +73,8 @@ private:
     MessagePtr Decode(const char* buf, int32_t len, ErrorCode* error);
 
     MessagePtr GetMessageByName(const std::string& type_name);
+
+    int32_t AsHostInt32(const char* buffer);
 };
 }
 }

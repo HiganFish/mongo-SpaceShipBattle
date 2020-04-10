@@ -7,7 +7,6 @@
 #include <cassert>
 #include <cstring>
 #include "Buffer.h"
-#include "Endian.h"
 
 using namespace mongo;
 using namespace mongo::net;
@@ -145,4 +144,19 @@ int32_t Buffer::PeekInt32()
         ::memcpy(&ret, ReadBegin(), sizeof(int32_t));
         return sockets::NetworkToHost32(ret);
     }
+}
+void Buffer::AppendInt32(int32_t num)
+{
+    int32_t network_num = sockets::HostToNetwork32(num);
+    ::memcpy(WriteBegin(), &network_num, sizeof(num));
+    AddWriteIndex(sizeof(num));
+}
+void Buffer::RAppendInt32(int32_t num)
+{
+    int32_t newwork_num = sockets::HostToNetwork32(num);
+    size_t num_len = sizeof(newwork_num);
+    assert(read_index_ <= BUFFER_BEGIN);
+    assert(read_index_ >= num_len);
+    memcpy(ReadBegin() - num_len, &newwork_num, num_len);
+    read_index_ -= num_len;
 }

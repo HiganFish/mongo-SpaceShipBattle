@@ -15,6 +15,7 @@ SET(HEADFILES
         EventLoopThreadPoll.h
         protobuf/ProtobufCodec.h
         protobuf/ProtobufServer.h
+        protobuf/Dispatcher.h
         Endian.h)
 
 SET(SRCFILES

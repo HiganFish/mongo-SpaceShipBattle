@@ -57,7 +57,14 @@ const std::string ProtobufCodec::ErrorCodeToString[static_cast<int>(ProtobufCode
 
 void ProtobufCodec::DefaultInvalidMessageCallback(const TcpConnectionPtr& conn, Buffer* buffer, ProtobufCodec::ErrorCode code)
 {
-    LOG_WARN << conn->GetConnectionName() << " DefaultInvalidMessageCallback: " << ErrorCodeToString[static_cast<int>(code)];
+    if (conn)
+    {
+        LOG_WARN << conn->GetConnectionName() << " DefaultInvalidMessageCallback: " << ErrorCodeToString[static_cast<int>(code)];
+    }
+    else
+    {
+        LOG_WARN << "DefaultInvalidMessageCallback: " << ErrorCodeToString[static_cast<int>(code)];
+    }
 
     if (conn && conn->Connected())
     {
@@ -72,8 +79,7 @@ MessagePtr ProtobufCodec::Decode(const char* buf, int32_t len, ErrorCode* error)
 {
     MessagePtr message;
 
-    int32_t message_sum = 0;
-    ::memcpy(&message_sum, buf + len - HEADER_LEN, sizeof(int32_t));
+    int32_t message_sum = AsHostInt32(buf + len - HEADER_LEN);
 
     int32_t check_sum = static_cast<int32_t>(
         ::adler32(1,
@@ -82,8 +88,7 @@ MessagePtr ProtobufCodec::Decode(const char* buf, int32_t len, ErrorCode* error)
 
     if (message_sum == check_sum)
     {
-        int32_t typename_len = 0;
-        ::memcpy(&typename_len, buf, HEADER_LEN);
+        int32_t typename_len = AsHostInt32(buf);
         if ((typename_len <= len - 2 * HEADER_LEN) && (typename_len >= 2))
         {
             std::string type_name(buf + HEADER_LEN, buf + HEADER_LEN + typename_len);
@@ -128,5 +133,31 @@ MessagePtr ProtobufCodec::GetMessageByName(const std::string& type_name)
         }
     }
     return message;
+}
+void ProtobufCodec::SerializeToEmptyBuffer(Buffer* buffer, const google::protobuf::Message& message)
+{
+    std::string message_type = message.GetTypeName();
+    int32_t type_len = static_cast<int32_t>(message_type.size() + 1);
+    buffer->AppendInt32(type_len);
+    buffer->Append(message_type.c_str(), type_len);
+
+    size_t data_len = message.ByteSizeLong();
+    buffer->EnsureWriteBytes(data_len);
+    message.SerializeToArray(buffer->WriteBegin(), data_len);
+    buffer->AddWriteIndex(data_len);
+
+    int32_t checksum = static_cast<int32_t>(::adler32(1, reinterpret_cast<const Bytef*>(buffer->ReadBegin()),
+        static_cast<int>(buffer->ReadableBytes())));
+    buffer->AppendInt32(checksum);
+
+    buffer->RAppendInt32(buffer->ReadableBytes());
+
+    assert(buffer->ReadableBytes() == sizeof(int32_t) * 3 + type_len + data_len);
+}
+int32_t ProtobufCodec::AsHostInt32(const char* buffer)
+{
+    int32_t result = 0;
+    memcpy(&result, buffer, sizeof(result));
+    return sockets::NetworkToHost32(result);
 }
 

@@ -53,7 +53,7 @@ void TcpConnection::WriteHandle()
 {
     if (status_ == CONNECTED)
     {
-        int ret = socket_->Send(output_buffer_.Begin(), output_buffer_.ReadableBytes());
+        int ret = socket_->Send(output_buffer_.ReadBegin(), output_buffer_.ReadableBytes());
         if (ret < 0)
         {
             ErrorHandle();
