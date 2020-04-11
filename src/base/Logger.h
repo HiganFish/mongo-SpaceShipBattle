@@ -99,5 +99,8 @@ inline mongo::Logger::LogLevel mongo::Logger::GetLogLevel()
 #define LOG_WARN mongo::Logger(mongo::Logger::WARN, __FILE__, __LINE__).GetStream()
 #define LOG_ERROR mongo::Logger(mongo::Logger::ERROR, __FILE__, __LINE__).GetStream()
 #define LOG_FATAL mongo::Logger(mongo::Logger::FATAL, __FILE__, __LINE__).GetStream()
+#define LOG_FATAL_IF(r) if (r)  \
+mongo::Logger(mongo::Logger::FATAL, __FILE__, __LINE__).GetStream() \
+
 
 #endif //MONGO_SRC_BASE_LOGGER_H

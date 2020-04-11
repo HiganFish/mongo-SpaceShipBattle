@@ -1,6 +1,7 @@
 //
 // Created by lsmg on 4/8/20.
 //
+#include <Logger.h>
 #include "EventLoopThreadPoll.h"
 #include "EventLoopThread.h"
 
@@ -20,6 +21,7 @@ EventLoopThreadPoll::~EventLoopThreadPoll()
 }
 void EventLoopThreadPoll::Start()
 {
+    LOG_INFO << "extra thread num " << thread_num_;
     for(int i = 0; i < thread_num_; ++i)
     {
         EventLoopThread* thread = new EventLoopThread();

@@ -2,6 +2,7 @@
 // Created by lsmg on 4/6/20.
 //
 
+#include <Logger.h>
 #include "Acceptor.h"
 
 using namespace mongo;
@@ -15,7 +16,7 @@ channel_(loop, listenfd_.GetFd())
     listenfd_.SetReuseAddr(true);
     listenfd_.SetReusePort(reuse_port);
     listenfd_.Bind(addr.GetAddr());
-
+    LOG_INFO << "Bind on " << addr.GetIpPort();
 }
 Acceptor::~Acceptor()
 {

@@ -2,7 +2,7 @@
 // Created by lsmg on 4/6/20.
 //
 
-#include "Log.h"
+#include <Logger.h>
 #include "TcpServer.h"
 #include "TcpConnection.h"
 #include "EventLoopThreadPoll.h"
@@ -28,7 +28,7 @@ void TcpServer::Start()
 }
 void TcpServer::NewConnection(int sockfd, const InetAddress& addr)
 {
-    std::string connection_name = server_name_ + addr.GetIpPort();
+    std::string connection_name = server_name_ + "-" + addr.GetIpPort();
 
     /**
      * 这一行代码很妙, 单线程时候返回最初传入的事件循环 多线程返回对应的事件循环
@@ -41,18 +41,21 @@ void TcpServer::NewConnection(int sockfd, const InetAddress& addr)
     connection->SetWriteOverCallback(writeover_callback_);
     connection->SetCloseCallback(std::bind(&TcpServer::CloseConnection, this, std::placeholders::_1));
 
+    LOG_INFO << "connection " << connection_name << " connected";
+
     connection->ConnectionCreated();
 }
 void TcpServer::CloseConnection(const TcpConnectionPtr& conn)
 {
     connections.erase(conn->GetConnectionName());
+    LOG_INFO << "connection " << conn->GetConnectionName() << " closed";
 }
 
 void TcpServer::DefaultMessageCallback(const TcpConnectionPtr& conn, Buffer* buffer)
 {
     std::string result = buffer->ReadAllAsString();
 
-    LOG_INFO("[%s]A new msg form %s\n%s",server_name_.c_str(), conn->GetClientAddr().GetIpPort().c_str(), result.c_str());
+    LOG_INFO << server_name_.c_str() << " a new msg form " << conn->GetClientAddr().GetIpPort() << '\n' << result.c_str();
 }
 void TcpServer::SetThreadNum(int nums)
 {

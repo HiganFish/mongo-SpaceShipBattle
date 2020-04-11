@@ -1,7 +1,6 @@
 SET(HEADFILES
         noncopyable.h
         Thread.h
-        Log.h
         Mutex.h
         Condition.h
         MutexGuard.h
@@ -12,7 +11,6 @@ SET(HEADFILES
 
 SET(SRCFILES
         Thread.cpp
-        Log.cpp
         Mutex.cpp
         Condition.cpp
         MutexGuard.cpp

@@ -2,7 +2,7 @@
 // Created by lsmg on 4/7/20.
 //
 
-#include <Log.h>
+#include <Logger.h>
 #include "TcpConnection.h"
 #include "Socket.h"
 #include "Channel.h"
@@ -72,7 +72,7 @@ void TcpConnection::WriteHandle()
 
 void TcpConnection::ErrorHandle()
 {
-    LOG_ERROR("A error happend on %s %d", client_addr_.GetIpPort().c_str(), socket_->GetFd());
+    LOG_ERROR << "A error happend on " << connection_name_ << "errno:" << errno << " errrormsg:" << strerror(errno);
 }
 void TcpConnection::CloseHandle()
 {

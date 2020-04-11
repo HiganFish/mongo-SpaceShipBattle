@@ -27,6 +27,16 @@ int main()
 
     codec_.SerializeToEmptyBuffer(&buffer, login_cs);
 
-    codec_.OnMessage(nullptr, &buffer);
+    size_t readable_bytes = buffer.ReadableBytes();
+
+    printf("%ld\n", readable_bytes);
+
+    for (int i = 0; i < readable_bytes; ++i)
+    {
+        printf("%02x ",*buffer.ReadBegin());;
+        buffer.AddReadIndex(1);
+    }
+
+    // codec_.OnMessage(nullptr, &buffer);
 
 }

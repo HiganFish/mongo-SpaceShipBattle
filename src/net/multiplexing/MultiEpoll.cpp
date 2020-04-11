@@ -3,9 +3,9 @@
 //
 
 #include <unistd.h>
+#include <Logger.h>
 #include "MultiEpoll.h"
 #include "../Channel.h"
-#include "Log.h"
 
 using namespace mongo;
 using namespace mongo::net;
@@ -17,7 +17,7 @@ MultiBase(loop),
 epollfd_(epoll_create(5)),
 events_(EVENT_INIT_NUMBERS)
 {
-    EXIT_IF(epollfd_ == -1, "epoll create")
+    LOG_FATAL_IF(epollfd_ == -1) << "epoll create";
 }
 
 MultiEpoll::~MultiEpoll()
@@ -58,15 +58,16 @@ void MultiEpoll::LoopOnce(int msec, ActiveChannelList* channel_list)
     int number = epoll_wait(epollfd_, events_.data(), static_cast<int>(events_.size()), msec);
     if (number < 0)
     {
-        EXIT_IF(errno != EINTR, "epoll_wait error")
+        LOG_FATAL_IF(errno != EINTR) << "epoll_wait error";
     }
     if (number > 0)
     {
+        LOG_DEBUG << number << " active event";
         FillActiveChannelList(number, channel_list);
     }
     else
     {
-        LOG_DEBUG("no active event")
+        // LOG_DEBUG << "no active event";
     }
 }
 
@@ -77,7 +78,7 @@ void MultiEpoll::FillActiveChannelList(int number, ActiveChannelList* channel_li
         auto channel = static_cast<Channel*>(events_[i].data.ptr);
         if (channel == nullptr)
         {
-            LOG_WARN("static_cast event.data.ptr error")
+            LOG_ERROR << "static_cast event.data.ptr error";
         }
         channel->SetEvents(events_[i].events);
         channel_list->push_back(channel);
