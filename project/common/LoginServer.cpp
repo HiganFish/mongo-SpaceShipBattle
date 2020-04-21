@@ -48,7 +48,7 @@ int main()
 {
     mongo::net::EventLoop loop;
     mongo::net::InetAddress addr(8000);
-    mongo::net::ProtobufServer server(&loop, "protobuf_server", addr);
+    mongo::net::ProtobufServer server(&loop, "login-server", addr);
     server_internal = &server;
 
     server.SetUnknowMessageCallback(OnUnknowMessage);

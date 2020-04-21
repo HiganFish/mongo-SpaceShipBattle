@@ -33,7 +33,13 @@ public:
         dispatcher.RegistCallback(descriptor, callback);
     }
 
+    void SetCloseCallback(const CloseCallback& callback);
+
+    void SetNewConnectionCallback(const TcpServer::NewConnectionCallback& callback);
+
     void Start();
+
+    void Send(const TcpConnectionPtr& conn, google::protobuf::Message* message);
 private:
     TcpServer server_;
     Dispatcher dispatcher;

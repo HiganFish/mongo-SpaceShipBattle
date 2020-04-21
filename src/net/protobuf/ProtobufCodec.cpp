@@ -71,9 +71,11 @@ void ProtobufCodec::DefaultInvalidMessageCallback(const TcpConnectionPtr& conn, 
         conn->CloseConnection();
     }
 }
-void ProtobufCodec::Send(const TcpConnectionPtr& conn, const MessagePtr& message)
+void ProtobufCodec::Send(const TcpConnectionPtr& conn, google::protobuf::Message* message)
 {
-
+    Buffer buffer;
+    SerializeToEmptyBuffer(&buffer, *message);
+    conn->Send(buffer.ReadBegin(), buffer.ReadableBytes());
 }
 MessagePtr ProtobufCodec::Decode(const char* buf, int32_t len, ErrorCode* error)
 {

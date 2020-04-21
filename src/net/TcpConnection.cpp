@@ -72,7 +72,12 @@ void TcpConnection::WriteHandle()
 
 void TcpConnection::ErrorHandle()
 {
-    LOG_ERROR << "A error happend on " << connection_name_ << "errno:" << errno << " errrormsg:" << strerror(errno);
+    if (status_ == CONNECTED)
+    {
+        LOG_ERROR << "A error happend on " << connection_name_ << " errno: " << errno << " errrormsg: " << strerror(errno);
+        CloseHandle();
+    }
+
 }
 void TcpConnection::CloseHandle()
 {

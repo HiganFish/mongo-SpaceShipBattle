@@ -19,6 +19,8 @@ class EventLoopThreadPoll;
 class TcpServer : noncopyable
 {
 public:
+    typedef std::function<void(const TcpConnectionPtr&)> NewConnectionCallback;
+
     TcpServer(EventLoop *loop, const std::string& name, const InetAddress& addr);
 
     /**
@@ -32,6 +34,12 @@ public:
     void SetWriteOverCallback(const WriteOverCallback& cb)
     { writeover_callback_ = cb; }
 
+    void SetCloseCallback(const CloseCallback& cb)
+    { close_callback_ = cb; }
+
+    void SetNewConnectionCallback(const NewConnectionCallback& cb)
+    { newconnection_callback_ = cb; }
+
     void SetThreadNum(int nums);
 private:
 
@@ -43,6 +51,8 @@ private:
 
     MessageCallback message_callback_;
     WriteOverCallback writeover_callback_;
+    CloseCallback close_callback_;
+    NewConnectionCallback newconnection_callback_;
 
     typedef std::map<std::string, TcpConnectionPtr> ConnectionPtrMap;
     ConnectionPtrMap connections;

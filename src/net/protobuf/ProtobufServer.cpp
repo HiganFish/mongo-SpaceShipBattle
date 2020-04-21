@@ -31,3 +31,15 @@ void ProtobufServer::Start()
 {
     server_.Start();
 }
+void ProtobufServer::Send(const TcpConnectionPtr& conn, google::protobuf::Message* message)
+{
+    codec_.Send(conn, message);
+}
+void ProtobufServer::SetCloseCallback(const CloseCallback& callback)
+{
+    server_.SetCloseCallback(callback);
+}
+void ProtobufServer::SetNewConnectionCallback(const TcpServer::NewConnectionCallback& callback)
+{
+    server_.SetNewConnectionCallback(callback);
+}

@@ -44,7 +44,7 @@ public:
 
     void SerializeToEmptyBuffer(Buffer* buffer, const google::protobuf::Message& message);
 
-    void Send(const TcpConnectionPtr& conn, const MessagePtr& message);
+    void Send(const TcpConnectionPtr& conn, google::protobuf::Message* message);
 
     void SetProtobufMessageCallback(const ProtobufMessageCallback& callback)
     {

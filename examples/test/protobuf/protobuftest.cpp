@@ -14,18 +14,21 @@ void OnMessage(const mongo::net::TcpConnectionPtr& conn, const mongo::net::Messa
 
 int main()
 {
-    struct timeval time;
-    gettimeofday(&time, nullptr);
-    mongo::LoginCS login_cs;
+//    struct timeval time;
+//    gettimeofday(&time, nullptr);
+//    mongo::LoginCS login_cs;
+//
+//    login_cs.set_username("123");
+//    login_cs.set_password("456");
+//    login_cs.set_timestamp(0);
 
-    login_cs.set_username("lsmg");
-    login_cs.set_password("abc@123");
-    login_cs.set_timestamp(time.tv_sec);
+    mongo::LoginSC login_sc;
+    login_sc.set_result(mongo::SUCCESS);
 
     mongo::net::Buffer buffer;
     mongo::net::ProtobufCodec codec_(OnMessage);
 
-    codec_.SerializeToEmptyBuffer(&buffer, login_cs);
+    codec_.SerializeToEmptyBuffer(&buffer, login_sc);
 
     size_t readable_bytes = buffer.ReadableBytes();
 

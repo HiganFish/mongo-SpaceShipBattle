@@ -44,11 +44,20 @@ void TcpServer::NewConnection(int sockfd, const InetAddress& addr)
     LOG_INFO << "connection " << connection_name << " connected";
 
     connection->ConnectionCreated();
+    if (newconnection_callback_)
+    {
+        newconnection_callback_(connection);
+    }
 }
 void TcpServer::CloseConnection(const TcpConnectionPtr& conn)
 {
     connections.erase(conn->GetConnectionName());
     LOG_INFO << "connection " << conn->GetConnectionName() << " closed";
+
+    if (close_callback_)
+    {
+        close_callback_(conn);
+    }
 }
 
 void TcpServer::DefaultMessageCallback(const TcpConnectionPtr& conn, Buffer* buffer)
