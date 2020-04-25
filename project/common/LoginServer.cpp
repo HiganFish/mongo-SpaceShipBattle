@@ -26,11 +26,12 @@ void OnLoginMessage(const mongo::net::TcpConnectionPtr& conn, const mongo::net::
     }
 
     mongo::LoginSC login_sc;
-    if (login_cs->username() != "123")
+    if ((login_cs->username() != "123") && (login_cs->username() != "abc"))
     {
         login_sc.set_result(mongo::USERNAME_NOT_EXIST);
     }
-    else if (login_cs->password() != "456")
+
+    if (login_cs->password() != "456")
     {
         login_sc.set_result(mongo::PASSWORD_NOT_CORRECT);
     }

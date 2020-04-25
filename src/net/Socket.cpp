@@ -34,6 +34,14 @@ void net::Socket::SetReusePort(bool enable)
     LOG_FATAL_IF(ret == -1) << (enable ? "enable" : "disable") << " reuseport error";
 }
 
+void net::Socket::SetKeepAlive(bool enable)
+{
+    int opt = enable ? 1 : 0;
+    int ret = setsockopt(sockfd_, SOL_SOCKET, SO_KEEPALIVE, static_cast<void*>(&opt), static_cast<socklen_t>(sizeof opt));
+
+    LOG_FATAL_IF(ret == -1) << (enable ? "enable" : "disable") << " keepalive error";
+}
+
 void net::Socket::Bind(const sockaddr_in& addr)
 {
     int ret = bind(sockfd_, (sockaddr*)&addr, static_cast<socklen_t>(sizeof addr));

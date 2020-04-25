@@ -39,10 +39,11 @@ void OnPlayMessage(const mongo::net::TcpConnectionPtr& conn, const mongo::net::M
 
     if (room->player_nums == 2)
     {
+        LOG_INFO << input->ByteSizeLong() << " " << conn->GetConnectionName() << " " << input->timestamp();
+
         server_internal->Send((room->players[0]), message.get());
         server_internal->Send((room->players[1]), message.get());
     }
-
 }
 
 void OnCloseCallback(const mongo::net::TcpConnectionPtr& conn)

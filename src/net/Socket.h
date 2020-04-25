@@ -21,6 +21,8 @@ public:
     void SetReuseAddr(bool enable);
     void SetReusePort(bool enable);
 
+    void SetKeepAlive(bool enable);
+
     void Bind(const sockaddr_in& addr);
     void Listening();
 
