@@ -44,6 +44,8 @@ void OnPlayMessage(const mongo::net::TcpConnectionPtr& conn, const mongo::net::M
         server_internal->Send((room->players[0]), message.get());
         server_internal->Send((room->players[1]), message.get());
     }
+
+    // server_internal->Send(conn, message.get());
 }
 
 void OnCloseCallback(const mongo::net::TcpConnectionPtr& conn)

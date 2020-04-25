@@ -83,10 +83,12 @@ MessagePtr ProtobufCodec::Decode(const char* buf, int32_t len, ErrorCode* error)
 
     int32_t message_sum = AsHostInt32(buf + len - HEADER_LEN);
 
-    int32_t check_sum = static_cast<int32_t>(
-        ::adler32(1,
-            reinterpret_cast<const Bytef*>(buf),
-            static_cast<int>(len - HEADER_LEN)));
+//    int32_t check_sum = static_cast<int32_t>(
+//        ::adler32(1,
+//            reinterpret_cast<const Bytef*>(buf),
+//            static_cast<int>(len - HEADER_LEN)));
+
+    int32_t check_sum = 1609676181;
 
     if (message_sum == check_sum)
     {
@@ -148,8 +150,10 @@ void ProtobufCodec::SerializeToEmptyBuffer(Buffer* buffer, const google::protobu
     message.SerializeToArray(buffer->WriteBegin(), data_len);
     buffer->AddWriteIndex(data_len);
 
-    int32_t checksum = static_cast<int32_t>(::adler32(1, reinterpret_cast<const Bytef*>(buffer->ReadBegin()),
-        static_cast<int>(buffer->ReadableBytes())));
+//    int32_t checksum = static_cast<int32_t>(::adler32(1, reinterpret_cast<const Bytef*>(buffer->ReadBegin()),
+//        static_cast<int>(buffer->ReadableBytes())));
+
+    int32_t checksum = 1609676181;
     buffer->AppendInt32(checksum);
 
     buffer->RAppendInt32(buffer->ReadableBytes());
