@@ -6,7 +6,7 @@
 #include <protobuf/ProtobufServer.h>
 #include <EventLoop.h>
 #include <Logger.h>
-#include "play.pb.h"
+#include "PlayerMoveData.pb.h"
 
 mongo::net::ProtobufServer* server_internal;
 
@@ -27,7 +27,7 @@ int current_room_player_num = 0;
 
 void OnPlayMessage(const mongo::net::TcpConnectionPtr& conn, const mongo::net::MessagePtr& message)
 {
-    std::shared_ptr<mongo::InputPackage> input = std::static_pointer_cast<mongo::InputPackage>(message);
+    std::shared_ptr<mongo::PlayerMoveData> input = std::static_pointer_cast<mongo::PlayerMoveData>(message);
     if (input == nullptr)
     {
         LOG_ERROR << conn->GetConnectionName() << " Invalid Message";
@@ -44,8 +44,6 @@ void OnPlayMessage(const mongo::net::TcpConnectionPtr& conn, const mongo::net::M
         server_internal->Send((room->players[0]), message.get());
         server_internal->Send((room->players[1]), message.get());
     }
-
-    // server_internal->Send(conn, message.get());
 }
 
 void OnCloseCallback(const mongo::net::TcpConnectionPtr& conn)
@@ -75,7 +73,7 @@ int main()
     mongo::net::ProtobufServer server(&loop, "play-server", addr);
     server_internal = &server;
 
-    server.RegistCallback(mongo::InputPackage::descriptor(), OnPlayMessage);
+    server.RegistCallback(mongo::PlayerMoveData::descriptor(), OnPlayMessage);
     server.SetCloseCallback(OnCloseCallback);
     server.SetNewConnectionCallback(OnNewConnection);
 

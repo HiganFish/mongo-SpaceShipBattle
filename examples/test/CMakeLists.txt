@@ -8,8 +8,10 @@ target_link_libraries(buffer_test mongo_net)
 add_executable(logger_test logger.cpp)
 target_link_libraries(logger_test mongo_net)
 
-add_executable(protobuf_server_test protobuf/ProtobufServerTest.cpp protobuf/login.pb.cc protobuf/login.pb.h)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/protobuf/login.pb.h)
+add_executable(protobuf_server_test protobuf/ProtobufServerTest.cpp)
 target_link_libraries(protobuf_server_test mongo_net)
 
-add_executable(protobuf_test protobuf/protobuftest.cpp protobuf/login.pb.cc protobuf/login.pb.h)
+add_executable(protobuf_test protobuf/protobuftest.cpp)
 target_link_libraries(protobuf_test mongo_net)
+endif()
