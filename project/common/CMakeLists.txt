@@ -11,11 +11,13 @@ add_executable(common-login ${LOGIN_SERVER_HEADER_FILES} ${LOGIN_SERVER_SRC_FILE
 target_link_libraries(common-login mongo_net)
 
 SET(PLAY_SERVER_HEADER_FILES
-    PlayerMoveData.pb.h
+        PlayerMoveData.pb.h
+        SpawnEnemyData.pb.h
 )
 
 SET(PLAY_SERVER_SRC_FILES
         PlayerMoveData.pb.cc
+        SpawnEnemyData.pb.cc
         PlayServer.cpp
 )
 

@@ -147,6 +147,7 @@ int32_t Buffer::PeekInt32()
 }
 void Buffer::AppendInt32(int32_t num)
 {
+    EnsureWriteBytes(sizeof num);
     int32_t network_num = sockets::HostToNetwork32(num);
     ::memcpy(WriteBegin(), &network_num, sizeof(num));
     AddWriteIndex(sizeof(num));

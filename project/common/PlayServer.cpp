@@ -7,6 +7,7 @@
 #include <EventLoop.h>
 #include <Logger.h>
 #include "PlayerMoveData.pb.h"
+#include "SpawnEnemyData.pb.h"
 
 mongo::net::ProtobufServer* server_internal;
 
@@ -28,6 +29,7 @@ int current_room_player_num = 0;
 void OnPlayMessage(const mongo::net::TcpConnectionPtr& conn, const mongo::net::MessagePtr& message)
 {
     std::shared_ptr<mongo::PlayerMoveData> input = std::static_pointer_cast<mongo::PlayerMoveData>(message);
+
     if (input == nullptr)
     {
         LOG_ERROR << conn->GetConnectionName() << " Invalid Message";
@@ -37,12 +39,32 @@ void OnPlayMessage(const mongo::net::TcpConnectionPtr& conn, const mongo::net::M
     int roomid = desk_map[conn->GetConnectionName()];
     GameRoom* room =  &conn_map[roomid];
 
-    if (room->player_nums == 2)
-    {
-        LOG_INFO << input->ByteSizeLong() << " " << conn->GetConnectionName() << " " << input->timestamp();
+    LOG_INFO << input->ByteSizeLong() << " " << conn->GetConnectionName() << " OnPlayMessage " << input->timestamp();
 
-        server_internal->Send((room->players[0]), message.get());
-        server_internal->Send((room->players[1]), message.get());
+    for (int i = 0; i < room->player_nums; ++i)
+    {
+        server_internal->Send((room->players[i]), message.get());
+    }
+}
+
+void OnSpawnMessage(const mongo::net::TcpConnectionPtr& conn, const mongo::net::MessagePtr& message)
+{
+    std::shared_ptr<mongo::SpawnEnemyData> input = std::static_pointer_cast<mongo::SpawnEnemyData>(message);
+
+    if (input == nullptr)
+    {
+        LOG_ERROR << conn->GetConnectionName() << " Invalid Message";
+        return;
+    }
+
+    int roomid = desk_map[conn->GetConnectionName()];
+    GameRoom* room =  &conn_map[roomid];
+
+    LOG_INFO << input->ByteSizeLong() << " " << conn->GetConnectionName() << " OnSpawnMessage " << input->timestamp();
+
+    for (int i = 0; i < room->player_nums; ++i)
+    {
+        server_internal->Send((room->players[i]), message.get());
     }
 }
 
@@ -53,7 +75,7 @@ void OnCloseCallback(const mongo::net::TcpConnectionPtr& conn)
 
 void OnNewConnection(const mongo::net::TcpConnectionPtr& conn)
 {
-    if (current_room_player_num == 2)
+    if (current_room_player_num == 10)
     {
         current_room_id++;
         current_room_player_num = 0;
@@ -74,6 +96,7 @@ int main()
     server_internal = &server;
 
     server.RegistCallback(mongo::PlayerMoveData::descriptor(), OnPlayMessage);
+    server.RegistCallback(mongo::SpawnEnemyData::descriptor(), OnSpawnMessage);
     server.SetCloseCallback(OnCloseCallback);
     server.SetNewConnectionCallback(OnNewConnection);
 
