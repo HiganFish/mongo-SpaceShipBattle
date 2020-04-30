@@ -13,9 +13,6 @@ SET(HEADFILES
         ConnectionCallback.h
         EventLoopThread.h
         EventLoopThreadPoll.h
-        protobuf/ProtobufCodec.h
-        protobuf/ProtobufServer.h
-        protobuf/Dispatcher.h
         Endian.h)
 
 SET(SRCFILES
@@ -32,9 +29,12 @@ SET(SRCFILES
         Buffer.cpp
         EventLoopThread.cpp
         EventLoopThreadPoll.cpp
-        protobuf/ProtobufCodec.cpp
-        protobuf/ProtobufServer.cpp
 )
 
 add_library(mongo_net ${HEADFILES} ${SRCFILES})
-target_link_libraries(mongo_net mongo_base protobuf z)
+target_link_libraries(mongo_net mongo_base)
+
+if(PROTOBUF_FOUND)
+    add_subdirectory(protobuf)
+    target_link_libraries(mongo_net mongo_protobuf)
+endif()
